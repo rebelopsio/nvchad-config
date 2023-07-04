@@ -7,6 +7,19 @@ M.disabled = {
   }
 }
 
+M.buffer = {
+  n = {
+    ["<leader>bn"] = { "<cmd> enew <CR>", "New buffer" },
+    -- close buffer + hide terminal buffer
+    ["<leader>bd"] = {
+      function()
+        require("nvchad_ui.tabufline").close_buffer()
+      end,
+      "Close buffer",
+    },
+  }
+}
+
 M.dap = {
   plugin = true,
   n = {
