@@ -1,5 +1,11 @@
 local M = {}
 
+M.disabled = {
+  n = {
+    ["<leader>b"] = "",
+    ["<leader>x"] = "",
+  }
+}
 
 M.dap = {
   plugin = true,
