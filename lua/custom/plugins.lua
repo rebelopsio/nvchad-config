@@ -163,30 +163,16 @@ local plugins = {
     "zbirenbaum/copilot.lua",
     cmd = "Copilot",
     build = ":Copilot auth",
-    opts = {
-      suggestion = { enabled = false },
-      panel = { enabled = false },
-      filetypes = {
-        markdown = true,
-        help = true,
-      },
-    },
+    event = "InsertEnter",
+    config = function()
+      require("copilot").setup({})
+    end,
   },
   {
     "zbirenbaum/copilot-cmp",
-    dependencies = "copilot.lua",
-    opts = {},
-    config = function(_, opts)
-      local copilot_cmp = require("copilot_cmp")
-      copilot_cmp.setup(opts)
-      -- attach cmp source whenever copilot attaches
-      -- fixes lazy-loading issues with the copilot cmp source
-      require("lazyvim.util").on_attach(function(client)
-        if client.name == "copilot" then
-          copilot_cmp._on_insert_enter({})
-        end
-      end)
-    end,
+    config = function ()
+      require("copilot_cmp").setup()
+    end
   },
   {
     "dreamsofcode-io/ChatGPT.nvim",
@@ -318,6 +304,13 @@ local plugins = {
       { "<leader>tO", function() require("neotest").output_panel.toggle() end, desc = "Toggle Output Panel" },
       { "<leader>tS", function() require("neotest").run.stop() end, desc = "Stop" },
     },
+  },
+  {
+    "hrsh7th/nvim-cmp",
+    config = function(_, opts)
+      opts.sources[#opts.sources + 1] = { name = "copilot" }
+      require("cmp").setup(opts)
+    end,
   },
 }
 return plugins
