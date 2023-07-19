@@ -20,6 +20,7 @@ local plugins = {
   },
   {
     "christoomey/vim-tmux-navigator",
+    lazy = false,
   },
   {
     "folke/trouble.nvim",
@@ -34,7 +35,7 @@ local plugins = {
         "[q",
         function()
           if require("trouble").is_open() then
-            require("trouble").previous({ skip_groups = true, jump = true })
+            require("trouble").previous { skip_groups = true, jump = true }
           else
             local ok, err = pcall(vim.cmd.cprev)
             if not ok then
@@ -48,7 +49,7 @@ local plugins = {
         "]q",
         function()
           if require("trouble").is_open() then
-            require("trouble").next({ skip_groups = true, jump = true })
+            require("trouble").next { skip_groups = true, jump = true }
           else
             local ok, err = pcall(vim.cmd.cnext)
             if not ok then
@@ -85,15 +86,24 @@ local plugins = {
         "mypy",
         "ruff",
         "pyright",
+        "stylua",
+        "gofumpt",
+        "gotests",
+        "golines",
+        "prettierd",
+        "yamllint",
+        "yamlls",
       },
     },
   },
+  { "williamboman/mason-lspconfig.nvim" },
+    dependencies = "williamboman/mapped.nvim",
   {
     "rcarriga/nvim-dap-ui",
     dependencies = "mfussenegger/nvim-dap",
     config = function()
-      local dap = require("dap")
-      local dapui = require("dapui")
+      local dap = require "dap"
+      local dapui = require "dapui"
       dapui.setup()
       dap.listeners.after.event_initialized["dapui_config"] = function()
         dapui.open()
@@ -104,13 +114,13 @@ local plugins = {
       dap.listeners.before.event_exited["dapui_config"] = function()
         dapui.close()
       end
-    end
+    end,
   },
   {
     "mfussenegger/nvim-dap",
     init = function()
-      require("core.utils").load_mappings("dap")
-    end
+      require("core.utils").load_mappings "dap"
+    end,
   },
   {
     "mfussenegger/nvim-dap-python",
@@ -122,7 +132,7 @@ local plugins = {
     config = function(_, opts)
       local path = "~/.local/share/nvim/mason/packages/debugpy/venv/bin/python"
       require("dap-python").setup(path)
-      require("core.utils").load_mappings("dap_python")
+      require("core.utils").load_mappings "dap_python"
     end,
   },
   {
@@ -131,8 +141,8 @@ local plugins = {
     dependencies = "mfussenegger/nvim-dap",
     config = function(_, opts)
       require("dap-go").setup(opts)
-      require("core.utils").load_mappings("dap_go")
-    end
+      require("core.utils").load_mappings "dap_go"
+    end,
   },
   {
     "neovim/nvim-lspconfig",
@@ -153,7 +163,7 @@ local plugins = {
     ft = "go",
     config = function(_, opts)
       require("gopher").setup(opts)
-      require("core.utils").load_mappings("gopher")
+      require("core.utils").load_mappings "gopher"
     end,
     build = function()
       vim.cmd [[silent! GoInstallDeps]]
@@ -165,14 +175,14 @@ local plugins = {
     build = ":Copilot auth",
     event = "InsertEnter",
     config = function()
-      require("copilot").setup({})
+      require("copilot").setup {}
     end,
   },
   {
     "zbirenbaum/copilot-cmp",
-    config = function ()
+    config = function()
       require("copilot_cmp").setup()
-    end
+    end,
   },
   {
     "dreamsofcode-io/ChatGPT.nvim",
@@ -180,12 +190,12 @@ local plugins = {
     dependencies = {
       "MunifTanjim/nui.nvim",
       "nvim-lua/plenary.nvim",
-      "nvim-telescope/telescope.nvim"
+      "nvim-telescope/telescope.nvim",
     },
     config = function()
-      require("chatgpt").setup({
-        api_key_cmd = "op read --account my.1password.com op://private/OpenAI/credential --no-newline"
-      })
+      require("chatgpt").setup {
+        api_key_cmd = "op read --account my.1password.com op://private/OpenAI/credential --no-newline",
+      }
     end,
   },
   {
@@ -200,37 +210,36 @@ local plugins = {
     "folke/which-key.nvim",
     disable = false,
     config = function()
---      require("plugins.configs.whichkey")
+      --      require("plugins.configs.whichkey")
       local present, wk = pcall(require, "which-key")
       if not present then
         return
       end
-      wk.register(
-        {
-          -- add group
-          ["<leader>"] = {
-            b = { name = "buffer" },
-            c = { name = "code" },
-            f = { name = "file/find" },
-            g = { name = "git" },
-            x = { name = "diagnostics/quickfix" },
-          },
+      wk.register {
+        -- add group
+        ["<leader>"] = {
+          b = { name = "buffer" },
+          c = { name = "code" },
+          f = { name = "file/find" },
+          g = { name = "git" },
+          x = { name = "diagnostics/quickfix" },
+        },
       }
-      )
     end,
     setup = function()
       require("core.utils").load_mappings "whichkey"
     end,
   },
   {
-    "nvim-neotest/neotest-go"
+    "nvim-neotest/neotest-go",
+    lazy = false,
   },
   {
     "nvim-neotest/neotest",
     dependencies = {
       "nvim-lua/plenary.nvim",
       "nvim-treesitter/nvim-treesitter",
-      "antoinemadec/FixCursorHold.nvim"
+      "antoinemadec/FixCursorHold.nvim",
     },
     opts = {
       -- Can be a list of adapters like what neotest expects,
@@ -248,16 +257,16 @@ local plugins = {
       output = { open_on_run = true },
       quickfix = {
         open = function()
-          if require("lazyvim.util").has("trouble.nvim") then
-            vim.cmd("Trouble quickfix")
+          if require("lazyvim.util").has "trouble.nvim" then
+            vim.cmd "Trouble quickfix"
           else
-            vim.cmd("copen")
+            vim.cmd "copen"
           end
         end,
       },
     },
     config = function(_, opts)
-      local neotest_ns = vim.api.nvim_create_namespace("neotest")
+      local neotest_ns = vim.api.nvim_create_namespace "neotest"
       vim.diagnostic.config({
         virtual_text = {
           format = function(diagnostic)

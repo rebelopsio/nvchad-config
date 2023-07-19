@@ -34,5 +34,10 @@ lspconfig.tsserver.setup({
   cmd = { "typescript-language-server", "--stdio" },
 })
 
-
+lspconfig.yamlls.setup({
+  on_attach = on_attach,
+  capabilities = capabilities,
+  cmd = { "yaml-language-server", "--stdio"},
+  filetypes = { "yaml" },
+})
 
